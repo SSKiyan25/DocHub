@@ -104,26 +104,35 @@
               </div>
           </form>
         </div>
-          <!-- Files -->
-        <div class="flex flex-col justify-between">
-          <div class="flex-auto inline-flex space-x-24">
-            <label>Document Name</label>
-            <label>Category</label>
-            <label>Tags</label>
-            <label>File Format</label>
-          </div>
-            <div v-for="file in files" :key="file.title" class="flex-auto mt-4 border-b-2 space-x-36">
-              <a :href="file.url" class="text-sm font-medium text-blue-900 dark:text-white underline hover:text-blue-700" download>
-                {{ file.title }}
-              </a>
-              <label>{{ file.category }}</label>
-              <label>{{ file.tags }}</label>
-              <a :href="file.url" id="downloadLink" download class="text-white items-center bg-blue-700 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 hover:underline font-medium rounded-lg text-sm px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb">
-                Download File
-              </a>
-              <div class="mb-4"></div>
-            </div>
-        </div>
+        <!-- Files -->
+        <table class="table-auto w-full">
+          <thead>
+            <tr>
+              <th class="border-r-2 border-b-2 px-4 py-2">Document Name</th>
+              <th class="border-r-2 border-b-2 px-4 py-2">Category</th>
+              <th class="border-r-2 border-b-2 px-4 py-2">Tags</th>
+              <th class="border-r-2 border-b-2 px-4 py-2">File Format</th>
+              <th class="border-b-2 px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="file in files" :key="file.title" class="text-center space-x-4">
+              <td class="border-r border-b-2 px-4 py-2">
+                <a :href="file.url" class="text-sm font-medium text-blue-900 dark:text-white underline hover:text-blue-700" download>
+                  {{ file.title }}
+                </a>
+              </td>
+              <td class="border-r border-b-2 px-4 py-2">{{ file.category }}</td>
+              <td class="border-r border-b-2 px-4 py-2">{{ file.tags }}</td>
+              <td class="border-r border-b-2 px-4 py-2">{{ file.file ? file.file.name.split('.').pop() : '' }}</td>
+              <td class="border-b-2 px-4 py-2">
+                <a :href="file.url" id="downloadLink" download class="text-white items-center bg-blue-700 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 hover:underline font-medium rounded-lg text-sm px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb">
+                  Download File
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
