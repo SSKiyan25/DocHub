@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-center min-h-screen px-4 sm:px-0">
     <div class="items-center w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-      <h1 class="text-3xl font-bold mb-8 text-center">Login</h1>
+      <h1 class="text-3xl font-bold mb-8 text-center">Login Your Account</h1>
         <form class="mx-auto">
           <div class="mb-5">
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>

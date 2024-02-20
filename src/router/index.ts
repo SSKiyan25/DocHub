@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Dashboard from '../views/DashboardView.vue'
+import Dashboard from '../components/DashboardComponent.vue'
 import Login from '../views/LoginView.vue'
 import SignUp from '../views/SignUpView.vue'
 
