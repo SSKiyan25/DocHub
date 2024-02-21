@@ -1,14 +1,14 @@
 <script setup lang="ts">
-  import Navigation from '../src/components/NavigationBar.vue'
-  import Footer from '../src/components/Footer.vue'
-  import {RouterView} from 'vue-router'
+import Navigation from "../src/components/NavigationBar.vue";
+import Footer from "../src/components/Footer.vue";
+import { RouterView } from "vue-router";
 
-  import { onMounted } from 'vue'
-  import { initFlowbite } from 'flowbite'
+import { onMounted } from "vue";
+import { initFlowbite } from "flowbite";
 
-  onMounted(() => {
-    initFlowbite();
-  })
+onMounted(() => {
+  initFlowbite();
+});
 </script>
 
 <template>
@@ -31,5 +31,23 @@
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+/* For desktop: */
+.container {
+  width: 75%;
+}
+
+/* For tablets: */
+@media (max-width: 1024px) {
+  .container {
+    width: 100%;
+  }
+}
+
+/* For mobile phones: */
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+  }
 }
 </style>

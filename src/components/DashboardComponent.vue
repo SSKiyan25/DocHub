@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col min-h-screen w-screen mx-auto px-4 mt-36 mb-28 items-center"
+    class="flex flex-col min-h-screen w-screen mx-auto px-4 mt-36 mb-28 items-center z-0"
   >
     <div class="flex-grow">
       <div class="mt-4 text-center items-center justify-center">
@@ -21,258 +21,268 @@
         </p>
       </div>
       <!-- Downloadable Section -->
-      <div class="container mx-auto bg-white shadow-lg rounded-lg p-6 mt-14">
+      <div class="container mx-auto shadow-lg rounded-lg p-6 mt-14">
         <div class="border-b-2 justify-between mb-8 flex items-center">
-          <h2 class="text-2xl font-semibold mb-2 text-gray-800">
+          <h2 class="text-2xl font-semibold mb-2">
             Downloadable Document Files
           </h2>
-          <form class="ml-auto flex items-center mb-2">
-            <div class="relative flex-grow">
-              <!-- Modal toggle -->
-              <button
-                data-modal-target="crud-modal"
-                data-modal-toggle="crud-modal"
-                class="block text-white bg-[#3F2E3E] hover:bg-[#331D2C] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-4 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 z-0"
-                type="button"
-              >
-                + Upload New Document
-              </button>
+          <div>
+            <form
+              @submit.prevent="uploadFileAndCloseModal"
+              class="ml-auto flex items-center mb-2"
+            >
+              <div class="relative flex-grow">
+                <!-- Modal toggle -->
+                <button
+                  data-modal-target="crud-modal"
+                  data-modal-toggle="crud-modal"
+                  class="block text-white bg-[#3F2E3E] hover:bg-[#331D2C] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-4 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 z-0"
+                  type="button"
+                  @click="isModalOpen = true"
+                >
+                  + Upload New Document
+                </button>
 
-              <!-- Main modal -->
-              <div
-                id="crud-modal"
-                tabindex="-1"
-                aria-hidden="true"
-                class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
-              >
-                <div class="absolute inset-0 bg-black opacity-50"></div>
-                <div class="relative p-4 w-full max-w-md max-h-full">
-                  <!-- Modal content -->
-                  <div
-                    class="relative bg-white rounded-lg shadow dark:bg-gray-700"
-                  >
-                    <!-- Modal header -->
+                <!-- Main modal -->
+                <div
+                  id="crud-modal"
+                  v-show="isModalOpen"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                >
+                  <div class="absolute inset-0 bg-black opacity-50"></div>
+                  <div class="relative p-4 w-full max-w-md max-h-full">
+                    <!-- Modal content -->
                     <div
-                      class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+                      class="relative bg-white rounded-lg shadow dark:bg-gray-700"
                     >
-                      <h3
-                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                      <!-- Modal header -->
+                      <div
+                        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
                       >
-                        Upload New Document
-                      </h3>
-                      <button
-                        type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-toggle="crud-modal"
-                      >
-                        <svg
-                          class="w-3 h-3"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 14 14"
+                        <h3
+                          class="text-lg font-semibold text-gray-900 dark:text-white"
                         >
-                          <path
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                          />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                      </button>
-                    </div>
-                    <!-- Modal body -->
-                    <form @submit.prevent="uploadFile" class="p-4 md:p-5">
-                      <div class="grid gap-4 mb-4 grid-cols-2">
-                        <div class="col-span-2">
-                          <label
-                            for="name"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >Title</label
-                          >
-                          <input
-                            type="text"
-                            v-model="newFile.title"
-                            name="name"
-                            id="name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Document Title"
-                            required
-                          />
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                          <label
-                            for="price"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >Tags</label
-                          >
-                          <input
-                            type="text"
-                            v-model="newFile.tags"
-                            name="price"
-                            id="price"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="DSO"
-                            required
-                          />
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                          <label
-                            for="category"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >Category</label
-                          >
-                          <select
-                            id="category"
-                            v-model="newFile.category"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            required
-                          >
-                            <option select="None">Select category</option>
-                            <option value="DSO_Templates">DSO Templates</option>
-                            <option value="Department_Files">
-                              Department Files
-                            </option>
-                            <option value="Other">Other</option>
-                          </select>
-                        </div>
-                        <div class="col-span-2">
-                          <label
-                            for="description"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >File Upload</label
-                          >
-                          <input
-                            class="block w-full text-base text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mb-4"
-                            id="file_input"
-                            type="file"
-                            @change="handleFileUpload"
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div class="ml-28">
+                          Upload New Document
+                        </h3>
                         <button
-                          type="submit"
-                          class="text-white items-center justif bg-[#3F2E3E] hover:bg-[#331D2C] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                          type="button"
+                          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                          data-modal-toggle="crud-modal"
                         >
-                          Add new document
+                          <svg
+                            class="w-3 h-3"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 14 14"
+                          >
+                            <path
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                            />
+                          </svg>
+                          <span class="sr-only">Close modal</span>
                         </button>
                       </div>
-                    </form>
+                      <!-- Modal body -->
+                      <form @submit.prevent="uploadFile" class="p-4 md:p-5">
+                        <div class="grid gap-4 mb-4 grid-cols-2">
+                          <div class="col-span-2">
+                            <label
+                              for="name"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Title</label
+                            >
+                            <input
+                              type="text"
+                              v-model="newFile.title"
+                              name="name"
+                              id="name"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="Document Title"
+                              required
+                            />
+                          </div>
+                          <div class="col-span-2 sm:col-span-1">
+                            <label
+                              for="price"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Tags</label
+                            >
+                            <input
+                              type="text"
+                              v-model="newFile.tags"
+                              name="price"
+                              id="price"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              placeholder="DSO"
+                              required
+                            />
+                          </div>
+                          <div class="col-span-2 sm:col-span-1">
+                            <label
+                              for="category"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >Category</label
+                            >
+                            <select
+                              id="category"
+                              v-model="newFile.category"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                              required
+                            >
+                              <option select="None">Select category</option>
+                              <option value="DSO_Templates">
+                                DSO Templates
+                              </option>
+                              <option value="Department_Files">
+                                Department Files
+                              </option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
+                          <div class="col-span-2">
+                            <label
+                              for="description"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >File Upload</label
+                            >
+                            <input
+                              class="block w-full text-base text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mb-4"
+                              id="file_input"
+                              type="file"
+                              @change="handleFileUpload"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div class="ml-28">
+                          <button
+                            type="submit"
+                            class="text-white items-center justif bg-[#3F2E3E] hover:bg-[#331D2C] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            @click="isModalOpen = false"
+                          >
+                            Add new document
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="relative flex-grow">
-              <button
-                id="dropdown-button"
-                data-dropdown-toggle="dropdown"
-                class="flex-shrink-0 z-10 inline-flex items-center py-2 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
-                type="button"
-              >
-                All categories
-                <svg
-                  class="w-2.5 h-2.5 ms-2.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 10 6"
+              <div class="relative flex-grow">
+                <button
+                  id="dropdown-button"
+                  data-dropdown-toggle="dropdown"
+                  class="flex-shrink-0 z-10 inline-flex items-center py-2 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+                  type="button"
                 >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m1 1 4 4 4-4"
-                  />
-                </svg>
-              </button>
-              <div
-                id="dropdown"
-                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute right-0"
-              >
-                <ul
-                  class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                  aria-labelledby="dropdown-button"
+                  All categories
+                  <svg
+                    class="w-2.5 h-2.5 ms-2.5"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 10 6"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m1 1 4 4 4-4"
+                    />
+                  </svg>
+                </button>
+                <div
+                  id="dropdown"
+                  class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute right-0"
                 >
-                  <li>
-                    <button
-                      type="button"
-                      class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      DSO Templates
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Department Files
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Other
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      None
-                    </button>
-                  </li>
-                </ul>
+                  <ul
+                    class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="dropdown-button"
+                  >
+                    <li>
+                      <button
+                        type="button"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        DSO Templates
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Department Files
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Other
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        None
+                      </button>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
-            <div class="relative flex-grow ml-2">
-              <input
-                type="search"
-                id="search-dropdown"
-                class="block p-2 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-                placeholder="Search..."
-              />
-              <button
-                type="submit"
-                class="absolute top-0 end-0 p-2 text-sm font-medium h-full text-white bg-[#3F2E3E] rounded-r-lg border border-blue-700 hover:bg-[#331D2C] focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              >
-                <svg
-                  class="w-4 h-4"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 20"
+              <div class="relative flex-grow ml-2">
+                <input
+                  type="search"
+                  id="search-dropdown"
+                  class="block p-2 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+                  placeholder="Search..."
+                />
+                <button
+                  type="submit"
+                  class="absolute top-0 end-0 p-2 text-sm font-medium h-full text-white bg-[#3F2E3E] rounded-r-lg border border-blue-700 hover:bg-[#331D2C] focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                  />
-                </svg>
-                <span class="sr-only">Search</span>
-              </button>
-            </div>
-          </form>
+                  <svg
+                    class="w-4 h-4"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                    />
+                  </svg>
+                  <span class="sr-only">Search</span>
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
         <!-- Files -->
         <table class="table-auto w-full">
           <thead>
             <tr>
-              <th class="border-r-2 border-b-2 px-4 py-2">Document Name</th>
-              <th class="border-r-2 border-b-2 px-4 py-2">Category</th>
-              <th class="border-r-2 border-b-2 px-4 py-2">Tags</th>
-              <th class="border-r-2 border-b-2 px-4 py-2">File Format</th>
-              <th class="border-b-2 px-4 py-2">Actions</th>
+              <th class="border-r border-b px-4 py-2">Document Name</th>
+              <th class="border-r border-b px-4 py-2">Category</th>
+              <th class="border-r border-b px-4 py-2">Tags</th>
+              <th class="border-r border-b px-4 py-2">File Format</th>
+              <th class="border-b px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -281,7 +291,7 @@
               :key="file.title"
               class="text-center space-x-4"
             >
-              <td class="border-r border-b-2 px-4 py-2">
+              <td class="border-r border-b px-4 py-2">
                 <a
                   :href="file.url"
                   class="text-sm font-medium text-blue-900 dark:text-white underline hover:text-blue-700"
@@ -290,9 +300,9 @@
                   {{ file.title }}
                 </a>
               </td>
-              <td class="border-r border-b-2 px-4 py-2">{{ file.category }}</td>
-              <td class="border-r border-b-2 px-4 py-2">{{ file.tags }}</td>
-              <td class="border-r border-b-2 px-4 py-2">
+              <td class="border-r border-b px-4 py-2">{{ file.category }}</td>
+              <td class="border-r border-b px-4 py-2">{{ file.tags }}</td>
+              <td class="border-r border-b px-4 py-2">
                 {{ file.file ? file.file.name.split(".").pop() : "" }}
               </td>
               <td class="border-b-2 px-4 py-2">
@@ -316,6 +326,28 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { initFlowbite } from "flowbite";
+import { initializeApp } from "firebase/app";
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+  updateMetadata,
+} from "firebase/storage";
+import { getFirestore, addDoc, collection } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCQr1LXsr8ZExzJoMjWy7XJJfjvMcG62T8",
+  authDomain: "dochub-ca00f.firebaseapp.com",
+  projectId: "dochub-ca00f",
+  storageBucket: "dochub-ca00f.appspot.com",
+  messagingSenderId: "927840663843",
+  appId: "1:927840663843:web:89777ea8ab021263cb7496",
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+const db = getFirestore();
 
 interface FileData {
   title: string;
@@ -324,6 +356,7 @@ interface FileData {
   file: File | null;
   url?: string;
 }
+
 onMounted(() => {
   initFlowbite();
 });
@@ -334,7 +367,9 @@ const newFile = ref<FileData>({
   category: "",
   file: null,
 });
+
 const files = ref<FileData[]>([]);
+const isModalOpen = ref(false);
 
 const handleFileUpload = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -344,20 +379,49 @@ const handleFileUpload = (event: Event) => {
   }
 };
 
-const uploadFile = () => {
+async function uploadFile() {
   if (newFile.value.file) {
-    const url = URL.createObjectURL(newFile.value.file);
-    files.value.push({ ...newFile.value, url });
-    newFile.value = { title: "", tags: "", category: "", file: null };
-  }
-};
-const downloadLink = document.getElementById("downloadLink");
-if (downloadLink) {
-  const downloadLink = document.getElementById(
-    "downloadLink"
-  ) as HTMLAnchorElement;
-  if (downloadLink) {
-    downloadLink.href = "path/to/your/file";
+    const filePath = `Documents/${newFile.value.file.name}`;
+    const fileRef = storageRef(storage, filePath);
+    try {
+      await uploadBytes(fileRef, newFile.value.file);
+      console.log("Uploaded a blob or file!");
+
+      // Add metadata to the file
+      const metadata = {
+        customMetadata: {
+          title: newFile.value.title,
+          tags: newFile.value.tags,
+          category: newFile.value.category,
+        },
+      };
+      await updateMetadata(fileRef, metadata);
+
+      // Get the download URL and store it in Firestore
+      const url = await getDownloadURL(fileRef);
+      newFile.value.url = url;
+
+      // Create a new object that doesn't include the file property
+      const { file, ...newFileWithoutFile } = newFile.value;
+
+      await addDoc(collection(db, "documents"), newFileWithoutFile);
+      alert("File Uploaded Sucessfully");
+    } catch (_error) {
+      alert("Upload failed!");
+    }
   }
 }
+
+async function uploadFileAndCloseModal() {
+  await uploadFile();
+  isModalOpen.value = false;
+}
+
+defineExpose({
+  newFile,
+  isModalOpen,
+  handleFileUpload,
+  uploadFile,
+  uploadFileAndCloseModal,
+});
 </script>

@@ -1,9 +1,7 @@
 <template>
-  <nav
-    class="bg-[#3F2E3E] dark:bg-gray-900 border-b-2 border-[#331D2C] top-0 w-full fixed height-[60px] z-10"
-  >
+  <nav class="border-b-2 bg-[#341D2C] top-0 w-full fixed height-[60px] z-10">
     <div
-      class="flex flex-wrap items-center justify-between max-w-screen md:mx-8 mx-auto p-4 shadow-lg"
+      class="flex flex-wrap items-center justify-between max-w-screen md:mx-8 mx-auto p-4 shadow-lg z-10"
     >
       <div class="flex flex-row">
         <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
