@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col min-h-screen w-screen mx-auto px-4 mt-36 mb-28 items-center z-0"
+    class="flex flex-col min-h-screen min-w-screen mx-auto px-4 mt-36 mb-28 items-center z-0"
   >
     <div class="flex-grow">
       <div class="mt-4 text-center items-center justify-center">
@@ -142,7 +142,7 @@
                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                               required
                             >
-                              <option select="None">Select category</option>
+                              <option value="" disabled>Select category</option>
                               <option value="DSO_Templates">
                                 DSO Templates
                               </option>
@@ -311,15 +311,31 @@
               <td class="border-r border-b px-4 py-2 text-center">
                 {{ file.format }}
               </td>
-              <td class="border-b px-4 py-2">
-                <a
-                  :href="file.url"
-                  target="_blank"
-                  download
-                  class="text-white items-center bg-blue-700 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 hover:underline font-medium rounded-lg text-sm px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb"
-                >
-                  Download File
-                </a>
+              <td class="border-b px-4 py-2 text-center space-x-3">
+                <div class="flex items-center justify-center space-x-3">
+                  <a
+                    :href="file.url"
+                    target="_blank"
+                    download
+                    class="text-white items-center bg-blue-700 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 hover:underline font-medium rounded-lg text-sm px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb"
+                  >
+                    Download File
+                  </a>
+                  <button class="text-green-500 text-xs">
+                    <span class="material-symbols-outlined mt-2"> edit </span>
+                  </button>
+                  <button class="text-red-500" @click="confirmDelete(file)">
+                    <span class="material-symbols-outlined mt-2"> delete </span>
+                  </button>
+                  <div v-if="isDeleteModalOpen" class="modal">
+                    <div class="modal-content">
+                      <h2>Confirm Delete</h2>
+                      <p>Are you sure you want to delete this file?</p>
+                      <button @click="deleteFileAndCloseModal">Yes</button>
+                      <button @click="isDeleteModalOpen = false">No</button>
+                    </div>
+                  </div>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -339,12 +355,15 @@ import {
   uploadBytes,
   getDownloadURL,
   updateMetadata,
+  deleteObject,
 } from "firebase/storage";
 import {
   getFirestore,
   addDoc,
   collection,
   onSnapshot,
+  doc,
+  deleteDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -428,6 +447,7 @@ async function uploadFile() {
     }
   }
 }
+
 // Fetch documents from Firestore
 const documentsCollection = collection(db, "documents");
 onSnapshot(documentsCollection, (snapshot) => {
@@ -442,11 +462,56 @@ async function uploadFileAndCloseModal() {
   isModalOpen.value = false;
 }
 
+async function deleteFile(file: FileData) {
+  if (file.id && file.url) {
+    // Decode the URL
+    const decodedUrl = decodeURIComponent(file.url);
+
+    // Construct the file path from the URL
+    const urlParts = decodedUrl.split("/");
+    const filePath = `Documents/${urlParts[urlParts.length - 1].split("?")[0]}`;
+    const fileRef = storageRef(storage, filePath);
+
+    try {
+      // Delete the file from Firebase Storage
+      await deleteObject(fileRef);
+
+      // Delete the document from Firestore
+      const documentRef = doc(db, "documents", file.id);
+      await deleteDoc(documentRef);
+
+      alert("File deleted successfully!");
+    } catch (_error) {
+      alert("Delete failed!");
+    }
+  }
+}
+
+const isDeleteModalOpen = ref(false);
+const fileToDelete = ref<FileData | null>(null);
+
+const confirmDelete = (file: FileData) => {
+  fileToDelete.value = file;
+  isDeleteModalOpen.value = true;
+};
+
+async function deleteFileAndCloseModal() {
+  if (fileToDelete.value) {
+    await deleteFile(fileToDelete.value);
+    isDeleteModalOpen.value = false;
+  }
+}
+
 defineExpose({
   newFile,
   isModalOpen,
+  isDeleteModalOpen,
+  fileToDelete,
   handleFileUpload,
   uploadFile,
   uploadFileAndCloseModal,
+  deleteFile,
+  confirmDelete,
+  deleteFileAndCloseModal,
 });
 </script>
