@@ -5,12 +5,12 @@
     <div class="flex-grow">
       <div class="mt-4 text-center items-center justify-center">
         <h1
-          class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white"
+          class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white sm:text-3xl"
         >
           Centralized Document and Logo Repository
         </h1>
         <p
-          class="mb-2 mt-8 text-sm font-light text-center text-gray-600 lg:text-base ml-4 dark:text-gray-400 max-w-7xl mx-auto justify-center"
+          class="mb-2 mt-8 text-xs sm:text-sm md:text-base font-light text-center text-gray-600 lg:text-base ml-4 dark:text-gray-400 max-w-7xl mx-auto justify-center"
         >
           Welcome to DocHub, the solution for accessing formal documents
           effortlessly. DocHub serves as a centralized document and logo
@@ -21,9 +21,13 @@
         </p>
       </div>
       <!-- Downloadable Section -->
-      <div class="container mx-auto shadow-lg rounded-lg p-6 mt-14">
+      <div
+        class="container mx-auto shadow-lg rounded-lg p-6 md:p-8 lg:p-10 xl:p-12 mt-14"
+      >
         <div class="border-b-2 justify-between mb-8 flex items-center">
-          <h2 class="text-2xl font-semibold mb-2">
+          <h2
+            class="text-base md:text-base lg:text-1xl xl:text-2xl font-semibold mb-2"
+          >
             Downloadable Document Files
           </h2>
           <div>
@@ -36,7 +40,7 @@
                 <button
                   data-modal-target="crud-modal"
                   data-modal-toggle="crud-modal"
-                  class="block text-white bg-[#3F2E3E] hover:bg-[#331D2C] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-4 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 z-0"
+                  class="block text-white bg-[#3F2E3E] hover:bg-[#331D2C] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs px-2 py-1 sm:text-sm sm:px-2 sm:py-0.5 md:text-base md:px-4 md:py-2.5 mr-4 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 z-0"
                   type="button"
                   @click="isModalOpen = true"
                 >
@@ -52,7 +56,9 @@
                   class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
                 >
                   <div class="absolute inset-0 bg-black opacity-50"></div>
-                  <div class="relative p-4 w-full max-w-md max-h-full">
+                  <div
+                    class="relative p-4 md:p-6 lg:p-8 w-full max-w-md max-h-full"
+                  >
                     <!-- Modal content -->
                     <div
                       class="relative bg-white rounded-lg shadow dark:bg-gray-700"
@@ -62,7 +68,7 @@
                         class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
                       >
                         <h3
-                          class="text-lg font-semibold text-gray-900 dark:text-white"
+                          class="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 dark:text-white"
                         >
                           Upload New Document
                         </h3>
@@ -72,7 +78,7 @@
                           data-modal-toggle="crud-modal"
                         >
                           <svg
-                            class="w-3 h-3"
+                            class="w-3 h-3 md:w-4 md:h-4"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -286,11 +292,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="file in files"
-              :key="file.title"
-              class="text-center space-x-4"
-            >
+            <tr v-for="file in files" :key="file.id">
               <td class="border-r border-b px-4 py-2">
                 <a
                   :href="file.url"
@@ -300,15 +302,19 @@
                   {{ file.title }}
                 </a>
               </td>
-              <td class="border-r border-b px-4 py-2">{{ file.category }}</td>
-              <td class="border-r border-b px-4 py-2">{{ file.tags }}</td>
-              <td class="border-r border-b px-4 py-2">
-                {{ file.file ? file.file.name.split(".").pop() : "" }}
+              <td class="border-r border-b px-4 py-2 text-center">
+                {{ file.category }}
               </td>
-              <td class="border-b-2 px-4 py-2">
+              <td class="border-r border-b px-4 py-2 text-center">
+                {{ file.tags }}
+              </td>
+              <td class="border-r border-b px-4 py-2 text-center">
+                {{ file.format }}
+              </td>
+              <td class="border-b px-4 py-2">
                 <a
                   :href="file.url"
-                  id="downloadLink"
+                  target="_blank"
                   download
                   class="text-white items-center bg-blue-700 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 hover:underline font-medium rounded-lg text-sm px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb"
                 >
@@ -334,7 +340,12 @@ import {
   getDownloadURL,
   updateMetadata,
 } from "firebase/storage";
-import { getFirestore, addDoc, collection } from "firebase/firestore";
+import {
+  getFirestore,
+  addDoc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCQr1LXsr8ZExzJoMjWy7XJJfjvMcG62T8",
@@ -350,11 +361,13 @@ const storage = getStorage(app);
 const db = getFirestore();
 
 interface FileData {
+  id?: string;
   title: string;
   tags: string;
   category: string;
   file: File | null;
   url?: string;
+  format?: string;
 }
 
 onMounted(() => {
@@ -401,16 +414,28 @@ async function uploadFile() {
       const url = await getDownloadURL(fileRef);
       newFile.value.url = url;
 
+      const format = newFile.value.file
+        ? newFile.value.file.name.split(".").pop()
+        : "";
       // Create a new object that doesn't include the file property
       const { file, ...newFileWithoutFile } = newFile.value;
+      const newFileWithFormat = { ...newFileWithoutFile, format };
 
-      await addDoc(collection(db, "documents"), newFileWithoutFile);
+      await addDoc(collection(db, "documents"), newFileWithFormat);
       alert("File Uploaded Sucessfully");
     } catch (_error) {
       alert("Upload failed!");
     }
   }
 }
+// Fetch documents from Firestore
+const documentsCollection = collection(db, "documents");
+onSnapshot(documentsCollection, (snapshot) => {
+  files.value = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as FileData[];
+});
 
 async function uploadFileAndCloseModal() {
   await uploadFile();
