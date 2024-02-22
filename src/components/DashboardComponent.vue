@@ -215,6 +215,7 @@
                   >
                     <li>
                       <button
+                        @click="filterFiles('DSO_Templates')"
                         type="button"
                         class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
@@ -223,6 +224,7 @@
                     </li>
                     <li>
                       <button
+                        @click="filterFiles('Department_Files')"
                         type="button"
                         class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
@@ -231,6 +233,7 @@
                     </li>
                     <li>
                       <button
+                        @click="filterFiles('Other')"
                         type="button"
                         class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
@@ -239,10 +242,20 @@
                     </li>
                     <li>
                       <button
+                        @click="filterFiles('None')"
                         type="button"
                         class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
                         None
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        @click="filterFiles('')"
+                        type="button"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        All
                       </button>
                     </li>
                   </ul>
@@ -250,6 +263,7 @@
               </div>
               <div class="relative flex-grow ml-2">
                 <input
+                  v-model="searchTerm"
                   type="search"
                   id="search-dropdown"
                   class="block p-2 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
@@ -292,7 +306,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="file in files" :key="file.id">
+            <tr v-for="file in filteredAndSearchedFiles" :key="file.id">
               <td class="border-r border-b px-4 py-2">
                 <a
                   :href="file.url"
@@ -365,7 +379,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { initFlowbite } from "flowbite";
 import { initializeApp } from "firebase/app";
 import {
@@ -521,6 +535,33 @@ async function deleteFileAndCloseModal() {
   }
 }
 
+const selectedCategory = ref("");
+
+const filterFiles = (category: string) => {
+  selectedCategory.value = category;
+};
+
+const searchTerm = ref("");
+
+const filteredAndSearchedFiles = computed(() => {
+  let result = files.value;
+
+  if (selectedCategory.value) {
+    result = result.filter((file) => file.category === selectedCategory.value);
+  }
+
+  if (searchTerm.value) {
+    const lowerCaseSearchTerm = searchTerm.value.toLowerCase();
+    result = result.filter(
+      (file) =>
+        file.title.toLowerCase().includes(lowerCaseSearchTerm) ||
+        file.tags.toLowerCase().includes(lowerCaseSearchTerm)
+    );
+  }
+
+  return result;
+});
+
 defineExpose({
   newFile,
   isModalOpen,
@@ -532,5 +573,10 @@ defineExpose({
   deleteFile,
   confirmDelete,
   deleteFileAndCloseModal,
+  filterFiles,
+  selectedCategory,
+
+  searchTerm,
+  filteredAndSearchedFiles,
 });
 </script>
