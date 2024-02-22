@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col min-h-screen min-w-screen mx-auto px-4 mt-36 mb-28 items-center z-0"
+    class="flex flex-col min-h-screen min-w-screen mt-36 mb-28 items-center z-0"
   >
     <div class="flex-grow">
       <div class="mt-4 text-center items-center justify-center">
@@ -311,28 +311,47 @@
               <td class="border-r border-b px-4 py-2 text-center">
                 {{ file.format }}
               </td>
-              <td class="border-b px-4 py-2 text-center space-x-3">
-                <div class="flex items-center justify-center space-x-3">
+              <td class="border-b px-4 py-2 text-center">
+                <div class="flex items-center justify-center">
                   <a
                     :href="file.url"
                     target="_blank"
                     download
-                    class="text-white items-center bg-blue-700 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 hover:underline font-medium rounded-lg text-sm px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb"
+                    class="text-white items-center bg-blue-700 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 hover:underline font-medium rounded-lg text-sm px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb mr-2"
                   >
                     Download File
                   </a>
                   <button class="text-green-500 text-xs">
-                    <span class="material-symbols-outlined mt-2"> edit </span>
+                    <span class="material-symbols-outlined mt-2 mr-2">
+                      edit
+                    </span>
                   </button>
                   <button class="text-red-500" @click="confirmDelete(file)">
                     <span class="material-symbols-outlined mt-2"> delete </span>
                   </button>
-                  <div v-if="isDeleteModalOpen" class="modal">
-                    <div class="modal-content">
-                      <h2>Confirm Delete</h2>
+                  <div
+                    v-if="
+                      isDeleteModalOpen && fileToDelete && fileToDelete === file
+                    "
+                    class="modal fixed inset-0 top-0 left-0 right-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+                  >
+                    <div class="modal-content bg-white p-5 rounded shadow-lg">
+                      <h2 class="font-bold">Confirm Delete</h2>
                       <p>Are you sure you want to delete this file?</p>
-                      <button @click="deleteFileAndCloseModal">Yes</button>
-                      <button @click="isDeleteModalOpen = false">No</button>
+                      <div class="flex justify-end space-x-2">
+                        <button
+                          @click="deleteFileAndCloseModal"
+                          class="text-white bg-red-600 px-4 py-2 rounded shadow"
+                        >
+                          Yes
+                        </button>
+                        <button
+                          @click="isDeleteModalOpen = false"
+                          class="text-white bg-gray-600 px-4 py-2 rounded shadow"
+                        >
+                          No
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
