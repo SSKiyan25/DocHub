@@ -53,7 +53,7 @@
                   v-show="isModalOpen"
                   tabindex="-1"
                   aria-hidden="true"
-                  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                  class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] min-h-full"
                 >
                   <div class="absolute inset-0 bg-black opacity-50"></div>
                   <div
@@ -242,15 +242,6 @@
                     </li>
                     <li>
                       <button
-                        @click="filterFiles('None')"
-                        type="button"
-                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        None
-                      </button>
-                    </li>
-                    <li>
-                      <button
                         @click="filterFiles('')"
                         type="button"
                         class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
@@ -298,7 +289,7 @@
         <table class="table-auto w-full">
           <thead>
             <tr>
-              <th class="border-r border-b px-4 py-2">Document Name</th>
+              <th class="border-r border-b px-4 py-2">Document Title</th>
               <th class="border-r border-b px-4 py-2">Category</th>
               <th class="border-r border-b px-4 py-2">Tags</th>
               <th class="border-r border-b px-4 py-2">Date Published</th>
@@ -343,6 +334,143 @@
                       edit
                     </span>
                   </button>
+                  <div
+                    id="crud-modal"
+                    v-show="isEditModalOpen.valueOf"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+                  >
+                    <div class="absolute inset-0 bg-black opacity-50"></div>
+                    <div
+                      class="relative p-4 md:p-6 lg:p-8 w-full max-w-md max-h-full"
+                    >
+                      <!-- Modal content -->
+                      <div
+                        class="relative bg-white rounded-lg shadow dark:bg-gray-700"
+                      >
+                        <!-- Modal header -->
+                        <div
+                          class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+                        >
+                          <h3
+                            class="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 dark:text-white"
+                          >
+                            Edit Document
+                          </h3>
+                          <button
+                            type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-toggle="crud-modal"
+                          >
+                            <svg
+                              class="w-3 h-3 md:w-4 md:h-4"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 14 14"
+                            >
+                              <path
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                              />
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                          </button>
+                        </div>
+                        <!-- Modal body -->
+                        <form
+                          @submit.prevent="editFileAndCloseModal"
+                          class="p-4 md:p-5"
+                        >
+                          <div class="grid gap-4 mb-4 grid-cols-2">
+                            <div class="col-span-2">
+                              <label
+                                for="name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >Title</label
+                              >
+                              <input
+                                type="text"
+                                v-model="fileToEditTitle"
+                                name="name"
+                                id="name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Document Title"
+                                required
+                              />
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                              <label
+                                for="price"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >Tags</label
+                              >
+                              <input
+                                type="text"
+                                v-model="fileToEditTags"
+                                name="price"
+                                id="price"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="DSO"
+                                required
+                              />
+                            </div>
+                            <div class="col-span-2 sm:col-span-1">
+                              <label
+                                for="category"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >Category</label
+                              >
+                              <select
+                                id="category"
+                                v-model="fileToEditCategory"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                required
+                              >
+                                <option value="" disabled>
+                                  Select category
+                                </option>
+                                <option value="DSO_Templates">
+                                  DSO Templates
+                                </option>
+                                <option value="Department_Files">
+                                  Department Files
+                                </option>
+                                <option value="Other">Other</option>
+                              </select>
+                            </div>
+                            <div class="col-span-2">
+                              <label
+                                for="description"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                >File Upload</label
+                              >
+                              <input
+                                class="block w-full text-base text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mb-4"
+                                id="file_input"
+                                type="file"
+                                @change="handleFileUpload"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div class="ml-28">
+                            <button
+                              type="submit"
+                              class="text-white items-center justif bg-[#3F2E3E] hover:bg-[#331D2C] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                              @click="editFileAndCloseModal"
+                            >
+                              Save Changes
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
 
                   <button class="text-red-500" @click="confirmDelete(file)">
                     <span class="material-symbols-outlined mt-2"> delete </span>
@@ -404,6 +532,8 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const firebaseConfig = {
   apiKey: "AIzaSyCQr1LXsr8ZExzJoMjWy7XJJfjvMcG62T8",
@@ -501,8 +631,14 @@ async function uploadFile() {
 
       await addDoc(collection(db, "documents"), newFileWithFormat);
       alert("File Uploaded Sucessfully");
-    } catch (_error) {
-      alert("Upload failed!");
+      router.go(0);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      if (error instanceof Error) {
+        alert("Upload failed: " + error.message);
+      } else {
+        alert("Upload failed");
+      }
     }
   }
 }
@@ -546,6 +682,7 @@ async function deleteFile(file: FileData) {
   }
 }
 
+//Edit File Functions
 const fileToEdit = ref<FileData | null>({
   title: "",
   tags: "",
