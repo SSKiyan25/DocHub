@@ -7,17 +7,17 @@
         <h1
           class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white sm:text-3xl"
         >
-          Centralized Document and Logo Repository
+          Centralized Document Repository
         </h1>
         <p
           class="mb-2 mt-8 text-xs sm:text-sm md:text-base font-light text-center text-gray-600 lg:text-base ml-4 dark:text-gray-400 max-w-7xl mx-auto justify-center"
         >
           Welcome to DocHub, the solution for accessing formal documents
-          effortlessly. DocHub serves as a centralized document and logo
-          repository, providing a streamlined platform for document storage,
-          retrieval, and organization. With powerful search filters, intuitive
-          categorization, and user-friendly features, DocHub ensures that
-          finding and downloading the right document is quick and hassle-free.
+          effortlessly. DocHub serves as a centralized document repository,
+          providing a streamlined platform for document storage, retrieval, and
+          organization. With powerful search filters, intuitive categorization,
+          and user-friendly features, DocHub ensures that finding and
+          downloading the right document is quick and hassle-free.
         </p>
       </div>
       <!-- Downloadable Section -->
@@ -286,237 +286,169 @@
           </div>
         </div>
         <!-- Files -->
-        <table class="table-auto w-full">
-          <thead>
-            <tr>
-              <th class="border-r border-b border-gray-400 px-4 py-2">
-                Document Title
-              </th>
-              <th class="border-r border-b border-gray-400 px-4 py-2">
-                Category
-              </th>
-              <th class="border-r border-b border-gray-400 px-4 py-2">Tags</th>
-              <th class="border-r border-b border-gray-400 px-4 py-2">
-                Date Published
-              </th>
-              <th class="border-b border-gray-400 px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="file in filteredAndSearchedFiles" :key="file.id">
-              <td class="border-r border-b border-gray-400 px-4 py-2">
-                <a
-                  :href="file.url"
-                  class="text-sm font-medium text-blue-900 dark:text-white underline hover:text-blue-700"
-                  download
-                >
-                  {{ file.title }}
-                </a>
-              </td>
-              <td
-                class="border-r border-b border-gray-400 px-4 py-2 text-center"
-              >
-                {{ file.category }}
-              </td>
-              <td
-                class="border-r border-b border-gray-400 px-4 py-2 text-center"
-              >
-                {{ file.tags }}
-              </td>
-              <td
-                class="border-r border-b border-gray-400 px-4 py-2 text-center"
-              >
-                {{ file.datePublished }}
-              </td>
-              <td class="border-b border-gray-400 px-4 py-2 text-center">
-                <div class="flex items-center justify-center">
-                  <a
-                    :href="file.url"
-                    target="_blank"
-                    download
-                    class="text-white items-center bg-blue-700 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 hover:underline font-medium rounded-lg text-sm px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb mr-2"
-                  >
-                    Download File
-                  </a>
-                  <button
-                    class="text-green-500 text-xs"
-                    @click="openEditModal(file)"
-                  >
-                    <span class="material-symbols-outlined mt-2 mr-2">
-                      edit
-                    </span>
-                  </button>
-                  <div
-                    id="crud-modal"
-                    v-show="isEditModalOpen.valueOf"
-                    tabindex="-1"
-                    aria-hidden="true"
-                    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
-                  >
-                    <div class="absolute inset-0 bg-black opacity-50"></div>
-                    <div
-                      class="relative p-4 md:p-6 lg:p-8 w-full max-w-md max-h-full"
-                    >
-                      <!-- Modal content -->
-                      <div
-                        class="relative bg-white rounded-lg shadow dark:bg-gray-700"
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+          >
+            <thead
+              class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+            >
+              <tr>
+                <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center">
+                    Document Title
+                    <a href="" @click.prevent="sortFiles('title')"
+                      ><svg
+                        class="w-3 h-3 ms-1.5"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
                       >
-                        <!-- Modal header -->
-                        <div
-                          class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
-                        >
-                          <h3
-                            class="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 dark:text-white"
-                          >
-                            Edit Document
-                          </h3>
+                        <path
+                          d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center">
+                    Category
+                    <a href="" @click.prevent="sortFiles('category')"
+                      ><svg
+                        class="w-3 h-3 ms-1.5"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center">
+                    Tags
+                    <a href="" @click.prevent="sortFiles('tags')"
+                      ><svg
+                        class="w-3 h-3 ms-1.5"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3">
+                  <div class="flex items-center">
+                    Date Published
+                    <a href="" @click.prevent="sortFiles('datePublished')"
+                      ><svg
+                        class="w-3 h-3 ms-1.5"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="file in sortedFiles"
+                :key="file.id"
+                class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+              >
+                <td
+                  class="px-6 py-4 hover:underline font-bold text-blue-500 cursor-pointer"
+                >
+                  <a :href="file.url" class="px-6 py-4" download>
+                    {{ file.title }}
+                  </a>
+                </td>
+                <td class="px-6 py-4">
+                  {{ file.category }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ file.tags }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ file.datePublished }}
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center">
+                    <a
+                      :href="file.url"
+                      target="_blank"
+                      download
+                      class="text-white items-center bg-blue-700 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 hover:underline font-medium rounded-lg text-sm px-2 py-1 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Download File
+                    </a>
+                    <button class="text-green-500 text-xs ml-2">
+                      <span class="material-symbols-outlined mt-2 mr-2">
+                        edit
+                      </span>
+                    </button>
+
+                    <button class="text-red-500" @click="confirmDelete(file)">
+                      <span class="material-symbols-outlined mt-2">
+                        delete
+                      </span>
+                    </button>
+                    <div
+                      v-if="
+                        isDeleteModalOpen &&
+                        fileToDelete &&
+                        fileToDelete === file
+                      "
+                      class="modal fixed inset-0 top-0 left-0 right-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+                    >
+                      <div class="modal-content bg-white p-5 rounded shadow-lg">
+                        <h2 class="font-bold">Confirm Delete</h2>
+                        <p>Are you sure you want to delete this file?</p>
+                        <div class="flex justify-end space-x-2">
                           <button
-                            type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-toggle="crud-modal"
+                            @click="deleteFileAndCloseModal"
+                            class="text-white bg-red-600 px-4 py-2 rounded shadow"
                           >
-                            <svg
-                              class="w-3 h-3 md:w-4 md:h-4"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 14 14"
-                            >
-                              <path
-                                stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                              />
-                            </svg>
-                            <span class="sr-only">Close modal</span>
+                            Yes
+                          </button>
+                          <button
+                            @click="isDeleteModalOpen = false"
+                            class="text-white bg-gray-600 px-4 py-2 rounded shadow"
+                          >
+                            No
                           </button>
                         </div>
-                        <!-- Modal body -->
-                        <form
-                          @submit.prevent="editFileAndCloseModal"
-                          class="p-4 md:p-5"
-                        >
-                          <div class="grid gap-4 mb-4 grid-cols-2">
-                            <div class="col-span-2">
-                              <label
-                                for="name"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >Title</label
-                              >
-                              <input
-                                type="text"
-                                v-model="fileToEditTitle"
-                                name="name"
-                                id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Document Title"
-                                required
-                              />
-                            </div>
-                            <div class="col-span-2 sm:col-span-1">
-                              <label
-                                for="price"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >Tags</label
-                              >
-                              <input
-                                type="text"
-                                v-model="fileToEditTags"
-                                name="price"
-                                id="price"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="DSO"
-                                required
-                              />
-                            </div>
-                            <div class="col-span-2 sm:col-span-1">
-                              <label
-                                for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >Category</label
-                              >
-                              <select
-                                id="category"
-                                v-model="fileToEditCategory"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                required
-                              >
-                                <option value="" disabled>
-                                  Select category
-                                </option>
-                                <option value="DSO_Templates">
-                                  DSO Templates
-                                </option>
-                                <option value="Department_Files">
-                                  Department Files
-                                </option>
-                                <option value="Other">Other</option>
-                              </select>
-                            </div>
-                            <div class="col-span-2">
-                              <label
-                                for="description"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >File Upload</label
-                              >
-                              <input
-                                class="block w-full text-base text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 mb-4"
-                                id="file_input"
-                                type="file"
-                                @change="handleFileUpload"
-                                required
-                              />
-                            </div>
-                          </div>
-                          <div class="ml-28">
-                            <button
-                              type="submit"
-                              class="text-white items-center justif bg-[#3F2E3E] hover:bg-[#331D2C] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                              @click="editFileAndCloseModal"
-                            >
-                              Save Changes
-                            </button>
-                          </div>
-                        </form>
                       </div>
                     </div>
                   </div>
-
-                  <button class="text-red-500" @click="confirmDelete(file)">
-                    <span class="material-symbols-outlined mt-2"> delete </span>
-                  </button>
-                  <div
-                    v-if="
-                      isDeleteModalOpen && fileToDelete && fileToDelete === file
-                    "
-                    class="modal fixed inset-0 top-0 left-0 right-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
-                  >
-                    <div class="modal-content bg-white p-5 rounded shadow-lg">
-                      <h2 class="font-bold">Confirm Delete</h2>
-                      <p>Are you sure you want to delete this file?</p>
-                      <div class="flex justify-end space-x-2">
-                        <button
-                          @click="deleteFileAndCloseModal"
-                          class="text-white bg-red-600 px-4 py-2 rounded shadow"
-                        >
-                          Yes
-                        </button>
-                        <button
-                          @click="isDeleteModalOpen = false"
-                          class="text-white bg-gray-600 px-4 py-2 rounded shadow"
-                        >
-                          No
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -542,8 +474,8 @@ import {
   onSnapshot,
   doc,
   deleteDoc,
-  updateDoc,
 } from "firebase/firestore";
+
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -702,64 +634,6 @@ const fileToEdit = ref<FileData | null>({
   file: null,
 });
 
-const isEditModalOpen = ref(false);
-
-const fileToEditTitle = computed({
-  get: () => fileToEdit.value?.title || "",
-  set: (newValue) => {
-    if (fileToEdit.value) {
-      fileToEdit.value.title = newValue;
-    }
-  },
-});
-
-const fileToEditTags = computed({
-  get: () => fileToEdit.value?.tags || "",
-  set: (newValue) => {
-    if (fileToEdit.value) {
-      fileToEdit.value.tags = newValue;
-    }
-  },
-});
-
-const fileToEditCategory = computed({
-  get: () => fileToEdit.value?.category || "",
-  set: (newValue) => {
-    if (fileToEdit.value) {
-      fileToEdit.value.category = newValue;
-    }
-  },
-});
-
-const openEditModal = (file: FileData) => {
-  fileToEdit.value = { ...file };
-  isEditModalOpen.value = true;
-};
-
-async function editFile() {
-  if (fileToEdit.value && fileToEdit.value.id) {
-    const documentRef = doc(db, "documents", fileToEdit.value.id);
-
-    // Update the document in Firestore
-    await updateDoc(documentRef, {
-      title: fileToEdit.value.title,
-      tags: fileToEdit.value.tags,
-      category: fileToEdit.value.category,
-    });
-
-    // Create a new object to trigger Vue's reactivity system
-    fileToEdit.value = { ...fileToEdit.value };
-
-    alert("File updated successfully!");
-  }
-}
-
-async function editFileAndCloseModal() {
-  await editFile();
-  isEditModalOpen.value = false;
-  fileToEdit.value = { title: "", tags: "", category: "", file: null };
-}
-
 const isDeleteModalOpen = ref(false);
 const fileToDelete = ref<FileData | null>(null);
 
@@ -802,6 +676,53 @@ const filteredAndSearchedFiles = computed(() => {
   return result;
 });
 
+const sortField = ref("");
+const sortDirection = ref("asc");
+
+const sortFiles = (field: string) => {
+  if (sortField.value === field) {
+    // If the field is already the current sort field, reverse the sort direction
+    sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
+  } else {
+    // Otherwise, update the sort field and set the direction to ascending
+    sortField.value = field;
+    sortDirection.value = "asc";
+  }
+};
+
+const sortedFiles = computed(() => {
+  const files = filteredAndSearchedFiles.value.slice();
+  files.sort((a: any, b: any) => {
+    const key = sortField.value;
+    if (key in a && key in b) {
+      let aValue = a[key];
+      let bValue = b[key];
+
+      // Check if the values are not null or undefined
+      if (
+        aValue !== null &&
+        aValue !== undefined &&
+        bValue !== null &&
+        bValue !== undefined
+      ) {
+        // Convert date strings to timestamps for comparison
+        if (key === "datePublished") {
+          aValue = new Date(aValue).getTime();
+          bValue = new Date(bValue).getTime();
+        }
+
+        if (aValue < bValue) {
+          return sortDirection.value === "asc" ? -1 : 1;
+        } else if (aValue > bValue) {
+          return sortDirection.value === "asc" ? 1 : -1;
+        }
+      }
+    }
+    return 0;
+  });
+  return files;
+});
+
 defineExpose({
   newFile,
   isModalOpen,
@@ -818,12 +739,7 @@ defineExpose({
   searchTerm,
   filteredAndSearchedFiles,
   fileToEdit,
-  isEditModalOpen,
-  openEditModal,
-  editFile,
-  editFileAndCloseModal,
-  fileToEditTitle,
-  fileToEditTags,
-  fileToEditCategory,
+  sortFiles,
+  sortedFiles,
 });
 </script>
