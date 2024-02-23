@@ -289,16 +289,22 @@
         <table class="table-auto w-full">
           <thead>
             <tr>
-              <th class="border-r border-b px-4 py-2">Document Title</th>
-              <th class="border-r border-b px-4 py-2">Category</th>
-              <th class="border-r border-b px-4 py-2">Tags</th>
-              <th class="border-r border-b px-4 py-2">Date Published</th>
-              <th class="border-b px-4 py-2">Actions</th>
+              <th class="border-r border-b border-gray-400 px-4 py-2">
+                Document Title
+              </th>
+              <th class="border-r border-b border-gray-400 px-4 py-2">
+                Category
+              </th>
+              <th class="border-r border-b border-gray-400 px-4 py-2">Tags</th>
+              <th class="border-r border-b border-gray-400 px-4 py-2">
+                Date Published
+              </th>
+              <th class="border-b border-gray-400 px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="file in filteredAndSearchedFiles" :key="file.id">
-              <td class="border-r border-b px-4 py-2">
+              <td class="border-r border-b border-gray-400 px-4 py-2">
                 <a
                   :href="file.url"
                   class="text-sm font-medium text-blue-900 dark:text-white underline hover:text-blue-700"
@@ -307,16 +313,22 @@
                   {{ file.title }}
                 </a>
               </td>
-              <td class="border-r border-b px-4 py-2 text-center">
+              <td
+                class="border-r border-b border-gray-400 px-4 py-2 text-center"
+              >
                 {{ file.category }}
               </td>
-              <td class="border-r border-b px-4 py-2 text-center">
+              <td
+                class="border-r border-b border-gray-400 px-4 py-2 text-center"
+              >
                 {{ file.tags }}
               </td>
-              <td class="border-r border-b px-4 py-2 text-center">
+              <td
+                class="border-r border-b border-gray-400 px-4 py-2 text-center"
+              >
                 {{ file.datePublished }}
               </td>
-              <td class="border-b px-4 py-2 text-center">
+              <td class="border-b border-gray-400 px-4 py-2 text-center">
                 <div class="flex items-center justify-center">
                   <a
                     :href="file.url"
