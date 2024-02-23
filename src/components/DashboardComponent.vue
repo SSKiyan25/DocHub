@@ -545,7 +545,7 @@ async function uploadFile() {
     }
     try {
       await uploadBytes(fileRef, newFile.value.file);
-      console.log("Uploaded a blob or file!");
+      console.log("Uploaded file!");
 
       // Add metadata to the file
       const metadata = {
@@ -655,6 +655,7 @@ const filterFiles = (category: string) => {
   selectedCategory.value = category;
 };
 
+//Seach Functions
 const searchTerm = ref("");
 
 const filteredAndSearchedFiles = computed(() => {
@@ -676,6 +677,7 @@ const filteredAndSearchedFiles = computed(() => {
   return result;
 });
 
+//Sorting Functions
 const sortField = ref("");
 const sortDirection = ref("asc");
 
