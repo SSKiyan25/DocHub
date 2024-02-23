@@ -301,7 +301,7 @@
               <th class="border-r border-b px-4 py-2">Document Name</th>
               <th class="border-r border-b px-4 py-2">Category</th>
               <th class="border-r border-b px-4 py-2">Tags</th>
-              <th class="border-r border-b px-4 py-2">File Format</th>
+              <th class="border-r border-b px-4 py-2">Date Published</th>
               <th class="border-b px-4 py-2">Actions</th>
             </tr>
           </thead>
@@ -323,7 +323,7 @@
                 {{ file.tags }}
               </td>
               <td class="border-r border-b px-4 py-2 text-center">
-                {{ file.format }}
+                {{ file.datePublished }}
               </td>
               <td class="border-b px-4 py-2 text-center">
                 <div class="flex items-center justify-center">
@@ -335,11 +335,15 @@
                   >
                     Download File
                   </a>
-                  <button class="text-green-500 text-xs">
+                  <button
+                    class="text-green-500 text-xs"
+                    @click="openEditModal(file)"
+                  >
                     <span class="material-symbols-outlined mt-2 mr-2">
                       edit
                     </span>
                   </button>
+
                   <button class="text-red-500" @click="confirmDelete(file)">
                     <span class="material-symbols-outlined mt-2"> delete </span>
                   </button>
@@ -389,6 +393,7 @@ import {
   getDownloadURL,
   updateMetadata,
   deleteObject,
+  listAll,
 } from "firebase/storage";
 import {
   getFirestore,
@@ -397,6 +402,7 @@ import {
   onSnapshot,
   doc,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -420,6 +426,7 @@ interface FileData {
   file: File | null;
   url?: string;
   format?: string;
+  datePublished?: string;
 }
 
 onMounted(() => {
@@ -448,6 +455,20 @@ async function uploadFile() {
   if (newFile.value.file) {
     const filePath = `Documents/${newFile.value.file.name}`;
     const fileRef = storageRef(storage, filePath);
+    const directoryRef = storageRef(storage, "Documents");
+
+    // List all files in the directory
+    const res = await listAll(directoryRef);
+
+    // Check if a file with the same name already exists
+    const fileExists = res.items.some(
+      (item) => item.name === newFile.value.file?.name
+    );
+
+    if (fileExists) {
+      alert("A file with the same name already exists!");
+      return;
+    }
     try {
       await uploadBytes(fileRef, newFile.value.file);
       console.log("Uploaded a blob or file!");
@@ -458,6 +479,7 @@ async function uploadFile() {
           title: newFile.value.title,
           tags: newFile.value.tags,
           category: newFile.value.category,
+          datePublished: new Date().toLocaleDateString(),
         },
       };
       await updateMetadata(fileRef, metadata);
@@ -471,7 +493,11 @@ async function uploadFile() {
         : "";
       // Create a new object that doesn't include the file property
       const { file, ...newFileWithoutFile } = newFile.value;
-      const newFileWithFormat = { ...newFileWithoutFile, format };
+      const newFileWithFormat = {
+        ...newFileWithoutFile,
+        format,
+        datePublished: metadata.customMetadata.datePublished,
+      };
 
       await addDoc(collection(db, "documents"), newFileWithFormat);
       alert("File Uploaded Sucessfully");
@@ -518,6 +544,71 @@ async function deleteFile(file: FileData) {
       alert("Delete failed!");
     }
   }
+}
+
+const fileToEdit = ref<FileData | null>({
+  title: "",
+  tags: "",
+  category: "",
+  file: null,
+});
+
+const isEditModalOpen = ref(false);
+
+const fileToEditTitle = computed({
+  get: () => fileToEdit.value?.title || "",
+  set: (newValue) => {
+    if (fileToEdit.value) {
+      fileToEdit.value.title = newValue;
+    }
+  },
+});
+
+const fileToEditTags = computed({
+  get: () => fileToEdit.value?.tags || "",
+  set: (newValue) => {
+    if (fileToEdit.value) {
+      fileToEdit.value.tags = newValue;
+    }
+  },
+});
+
+const fileToEditCategory = computed({
+  get: () => fileToEdit.value?.category || "",
+  set: (newValue) => {
+    if (fileToEdit.value) {
+      fileToEdit.value.category = newValue;
+    }
+  },
+});
+
+const openEditModal = (file: FileData) => {
+  fileToEdit.value = { ...file };
+  isEditModalOpen.value = true;
+};
+
+async function editFile() {
+  if (fileToEdit.value && fileToEdit.value.id) {
+    const documentRef = doc(db, "documents", fileToEdit.value.id);
+
+    // Update the document in Firestore
+    await updateDoc(documentRef, {
+      title: fileToEdit.value.title,
+      tags: fileToEdit.value.tags,
+      category: fileToEdit.value.category,
+    });
+
+    // Create a new object to trigger Vue's reactivity system
+    fileToEdit.value = { ...fileToEdit.value };
+
+    alert("File updated successfully!");
+  }
+}
+
+async function editFileAndCloseModal() {
+  await editFile();
+  isEditModalOpen.value = false;
+  fileToEdit.value = { title: "", tags: "", category: "", file: null };
 }
 
 const isDeleteModalOpen = ref(false);
@@ -575,8 +666,15 @@ defineExpose({
   deleteFileAndCloseModal,
   filterFiles,
   selectedCategory,
-
   searchTerm,
   filteredAndSearchedFiles,
+  fileToEdit,
+  isEditModalOpen,
+  openEditModal,
+  editFile,
+  editFileAndCloseModal,
+  fileToEditTitle,
+  fileToEditTags,
+  fileToEditCategory,
 });
 </script>
